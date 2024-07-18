@@ -2,7 +2,7 @@
 #
 # Makefile for the kernel multimedia device drivers.
 #
-
+subdir-ccflags-y += -DDEBUG=1
 #
 # I2C drivers should come before other drivers, otherwise they'll fail
 # when compiled as builtin drivers
