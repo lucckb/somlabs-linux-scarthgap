@@ -575,7 +575,7 @@
         clock-frequency = <100000>;
         status = "okay";
 
-        ov5640_0: ov5640_mipi@3c {
+        ov5640_0: ov5640@3c {
                 compatible = "ovti,ov5640";
                 reg = <0x3c>;
                 pinctrl-names = "default";
@@ -594,8 +594,8 @@
                 status = "okay";
 
                 port {
-                        ov5640_mipi_0_ep: endpoint {
-                                remote-endpoint = <&mipi_csi0_ep>;
+                        ov5640_0_out: endpoint {
+                                remote-endpoint = <&mipi_csi_0_in>;
                                 data-lanes = <1 2>;
                                 clock-lanes = <0>;
                         };
@@ -629,7 +629,7 @@
         clock-frequency = <100000>;
         status = "okay";
 
-        ov5640_1: ov5640_mipi@3c {
+        ov5640_1: ov5640@3c {
                 compatible = "ovti,ov5640";
                 reg = <0x3c>;
                 pinctrl-names = "default";
@@ -648,8 +648,8 @@
                 status = "okay";
 
                 port {
-                        ov5640_mipi_1_ep: endpoint {
-                                remote-endpoint = <&mipi_csi1_ep>;
+                        ov5640_1_out: endpoint {
+                                remote-endpoint = <&mipi_csi_1_in>;
                                 data-lanes = <1 2>;
                                 clock-lanes = <0>;
                         };
@@ -714,60 +714,61 @@
         #size-cells = <0>;
         status = "okay";
 
-        port@0 {
-                reg = <0>;
-                mipi_csi0_ep: endpoint {
-                        remote-endpoint = <&ov5640_mipi_0_ep>;
-                        data-lanes = <2>;
-                        csis-hs-settle = <13>;
-                        csis-clk-settle = <2>;
-                        csis-wclk;
+        ports {
+            port@0 {
+                mipi_csi_0_in: endpoint {
+                    remote-endpoint = <&ov5640_0_out>;
+                    data-lanes = <1 2>;
+                    clock-lanes = <0>;
                 };
+            };
+
+            port@1 {
+                mipi_csi_0_out: endpoint {
+                    remote-endpoint = <&isi_in_0>;
+                };
+            };
         };
 };
+
 
 &mipi_csi_1 {
         #address-cells = <1>;
         #size-cells = <0>;
         status = "okay";
 
-        port@1 {
-                reg = <1>;
-                mipi_csi1_ep: endpoint {
-                        remote-endpoint = <&ov5640_mipi_1_ep>;
-                        data-lanes = <2>;
-                        csis-hs-settle = <13>;
-                        csis-clk-settle = <2>;
-                        csis-wclk;
-                        swap-clk;
-                        swap-data;
+        ports {
+            port@0 {
+                mipi_csi_1_in: endpoint {
+                    remote-endpoint = <&ov5640_1_out>;
+                    data-lanes = <1 2>;
+                    clock-lanes = <0>;
                 };
+            };
+
+            port@1 {
+                mipi_csi_1_out: endpoint {
+                    remote-endpoint = <&isi_in_1>;
+                };
+            };
         };
 };
 
-&cameradev {
-        status = "okay";
-};
 
 &isi_0 {
         status = "okay";
+        dma-coherent;
 
-        cap_device {
-                status = "okay";
-        };
-
-        m2m_device {
-                status = "okay";
-        };
-};
-
-&isi_1 {
-        status = "okay";
-
-        cap_device {
-                status = "okay";
+        ports {
+            port@0 {
+                isi_in_0: endpoint {
+//                    bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+                    remote-endpoint = <&mipi_csi_0_out>;
+                };
+            };
         };
 };
+
 
 &flexcan1 {
         status = "okay";
