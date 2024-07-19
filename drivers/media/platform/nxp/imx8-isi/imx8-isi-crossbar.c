@@ -606,6 +606,8 @@ int mxc_isi_crossbar_init(struct mxc_isi_dev *isi)
 
 	xbar->isi = isi;
 
+    dev_info(isi->dev, "mxc_isi_crossbar_init\n");
+
 	v4l2_subdev_init(sd, &mxc_isi_crossbar_subdev_ops);
 	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_STREAMS;
 	strscpy(sd->name, "crossbar", sizeof(sd->name));
