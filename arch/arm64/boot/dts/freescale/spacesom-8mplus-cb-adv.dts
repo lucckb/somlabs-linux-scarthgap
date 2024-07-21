@@ -734,6 +734,7 @@
 };
 
 /*
+
 &mipi_csi_1 {
         #address-cells = <1>;
         #size-cells = <0>;
@@ -757,15 +758,17 @@
 };
 */
 
+
 &isi_0 {
         status = "okay";
+
 /*
         dma-coherent;
 
         ports {
             port@0 {
                 isi_in_0: endpoint {
-//                    bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+                    bus-type = <MEDIA_BUS_TYPE_CSI2_DPHY>;
                     remote-endpoint = <&mipi_csi_0_out>;
                 };
             };
