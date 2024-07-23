@@ -2341,6 +2341,9 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
 	bool auto_exp =  sensor->ctrls.auto_exp->val == V4L2_EXPOSURE_AUTO;
 	int ret;
 
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
+
 	dn_mode = mode->dn_mode;
 	orig_dn_mode = orig_mode->dn_mode;
 
@@ -2488,6 +2491,8 @@ static int ov5640_set_power_on(struct ov5640_dev *sensor)
 	struct i2c_client *client = sensor->i2c_client;
 	int ret;
 
+	dev_info(&client->dev, "%s\n", __func__);
+
 	ret = clk_prepare_enable(sensor->xclk);
 	if (ret) {
 		dev_err(&client->dev, "%s: failed to enable clock\n",
@@ -2521,6 +2526,9 @@ xclk_off:
 
 static void ov5640_set_power_off(struct ov5640_dev *sensor)
 {
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
+
 	ov5640_power(sensor, false);
 	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
 	clk_disable_unprepare(sensor->xclk);
@@ -2529,6 +2537,9 @@ static void ov5640_set_power_off(struct ov5640_dev *sensor)
 static int ov5640_set_power_mipi(struct ov5640_dev *sensor, bool on)
 {
 	int ret;
+
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s: %d\n", __func__, on);
 
 	if (!on) {
 		/* Reset MIPI bus settings to their default values. */
@@ -2739,6 +2750,9 @@ static int ov5640_s_power(struct v4l2_subdev *sd, int on)
 {
 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
 	int ret = 0;
+
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s: %d\n", __func__, on);
 
 	mutex_lock(&sensor->lock);
 
@@ -3375,6 +3389,9 @@ static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
 
 	/* v4l2_ctrl_lock() locks our own mutex */
 
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
+
 	switch (ctrl->id) {
 	case V4L2_CID_VBLANK:
 		/* Update the exposure range to the newly programmed vblank. */
@@ -3453,6 +3470,9 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
 	unsigned int max_vblank;
 	unsigned int hblank;
 	int ret;
+
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
 
 	v4l2_ctrl_handler_init(hdl, 32);
 
@@ -3712,6 +3732,9 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
 	int delay;
 	int ret = 0;
 
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
+
 	mutex_lock(&sensor->lock);
 
 	if (sensor->streaming == !enable) {
@@ -3752,6 +3775,9 @@ static int ov5640_init_cfg(struct v4l2_subdev *sd,
 	struct v4l2_mbus_framefmt *fmt =
 				v4l2_subdev_get_try_format(sd, state, 0);
 	struct v4l2_rect *crop = v4l2_subdev_get_try_crop(sd, state, 0);
+
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
 
 	*fmt = ov5640_is_csi2(sensor) ? ov5640_csi2_default_fmt :
 					ov5640_dvp_default_fmt;
@@ -3807,6 +3833,8 @@ static const struct media_entity_operations ov5640_sd_media_ops = {
 static int ov5640_get_regulators(struct ov5640_dev *sensor)
 {
 	int i;
+    struct i2c_client *client = sensor->i2c_client;
+    dev_info(&client->dev, "%s\n", __func__);
 
 	for (i = 0; i < OV5640_NUM_SUPPLIES; i++)
 		sensor->supplies[i].supply = ov5640_supply_name[i];
@@ -3821,6 +3849,8 @@ static int ov5640_check_chip_id(struct ov5640_dev *sensor)
 	struct i2c_client *client = sensor->i2c_client;
 	int ret = 0;
 	u16 chip_id;
+
+    dev_info(&client->dev, "%s\n", __func__);
 
 	ret = ov5640_set_power_on(sensor);
 	if (ret)
