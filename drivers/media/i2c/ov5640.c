@@ -2327,6 +2327,9 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
 	bool auto_exp =  sensor->ctrls.auto_exp->val == V4L2_EXPOSURE_AUTO;
 	int ret;
 
+    struct i2c_client *client = sensor->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
+
 	dn_mode = mode->dn_mode;
 	orig_dn_mode = orig_mode->dn_mode;
 
@@ -2412,6 +2415,9 @@ static int ov5640_restore_mode(struct ov5640_dev *sensor)
 {
 	int ret;
 
+    struct i2c_client *client = sensor->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
+
 	/* first load the initial register values */
 	ov5640_load_regs(sensor, ov5640_init_setting,
 			 ARRAY_SIZE(ov5640_init_setting));
@@ -2480,6 +2486,8 @@ static int ov5640_set_power_on(struct ov5640_dev *sensor)
 {
 	struct i2c_client *client = sensor->i2c_client;
 	int ret;
+
+	dev_info(&client->dev, "%s", __func__);
 
 	ret = clk_prepare_enable(sensor->xclk);
 	if (ret) {
@@ -2698,6 +2706,8 @@ static int ov5640_set_power_dvp(struct ov5640_dev *sensor, bool on)
 static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
 {
 	int ret = 0;
+    struct i2c_client *client = sensor->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
 
 	if (on) {
 		ret = ov5640_set_power_on(sensor);
@@ -2731,6 +2741,9 @@ static int ov5640_sensor_suspend(struct device *dev)
 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
 	struct ov5640_dev *ov5640 = to_ov5640_dev(sd);
 
+    struct i2c_client *client = ov5640->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
+
 	return ov5640_set_power(ov5640, false);
 }
 
@@ -2738,6 +2751,9 @@ static int ov5640_sensor_resume(struct device *dev)
 {
 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
 	struct ov5640_dev *ov5640 = to_ov5640_dev(sd);
+
+	struct i2c_client *client = ov5640->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
 
 	return ov5640_set_power(ov5640, true);
 }
@@ -3029,6 +3045,9 @@ static int ov5640_set_framefmt(struct ov5640_dev *sensor,
 	bool is_jpeg = format->code == MEDIA_BUS_FMT_JPEG_1X8;
 	const struct ov5640_pixfmt *pixfmt;
 	int ret = 0;
+
+     struct i2c_client *client = sensor->i2c_client;
+	dev_info(&client->dev, "%s", __func__);
 
 	pixfmt = ov5640_code_to_pixfmt(sensor, format->code);
 
