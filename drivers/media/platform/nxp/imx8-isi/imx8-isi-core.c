@@ -121,8 +121,6 @@ static int mxc_isi_v4l2_init(struct mxc_isi_dev *isi)
 	unsigned int i;
 	int ret;
 
-    dev_info(isi->dev, "mxc_isi_v4l2_init\n");
-
 	/* Initialize the media device. */
 	strscpy(media_dev->model, "FSL Capture Media Device",
 		sizeof(media_dev->model));
@@ -455,8 +453,6 @@ static int mxc_isi_probe(struct platform_device *pdev)
 	unsigned int i;
 	int ret = 0;
 
-    dev_info(dev, "mxc_isi_probe start\n");
-
 	isi = devm_kzalloc(dev, sizeof(*isi), GFP_KERNEL);
 	if (!isi)
 		return -ENOMEM;
@@ -531,8 +527,6 @@ static int mxc_isi_probe(struct platform_device *pdev)
 	}
 
 	mxc_isi_debug_init(isi);
-
-    dev_info(dev, "mxc_isi_probe end\n");
 
 	pm_runtime_put(dev);
 	return 0;

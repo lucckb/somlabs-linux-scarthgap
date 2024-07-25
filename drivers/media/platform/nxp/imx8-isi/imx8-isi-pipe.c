@@ -820,8 +820,6 @@ int mxc_isi_pipe_init(struct mxc_isi_dev *isi, unsigned int id)
 	int irq;
 	int ret;
 
-    dev_info(isi->dev, "mxc_isi_pipe_init\n");
-
 	pipe->id = id;
 	pipe->isi = isi;
 	pipe->regs = isi->regs + id * isi->pdata->reg_offset;
